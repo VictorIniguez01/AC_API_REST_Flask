@@ -1,24 +1,20 @@
-from sqlalchemy import Column, String,ForeignKey, DateTime, Boolean, Integer
-from sqlalchemy.orm import relationship
-from models.base import Base
 from models.residence import House
+from models.base import db
 
-class Visitor(Base):
+class Visitor(db.Model):
     __tablename__ = 'visitors_visitor'
 
-    id = Column(Integer, primary_key=True)
-    visitor_name = Column(String(255))
-    visitor_last_name = Column(String(255))
-    visitor_car_brand = Column(String(255))
-    visitor_car_model = Column(String(255))
-    visitor_car_plate = Column(String(255))
-    visitor_car_color = Column(String(255))
-    visitor_entry_datetime = Column(DateTime(timezone=True))
-    visitor_going_coto = Column(Boolean)
-    visitor_is_entry = Column(Boolean)
-    house_id = Column(ForeignKey('residents_house.id'))
-
-    house = relationship('House', backref='visitors_visitor')
+    id = db.Column(db.Integer, primary_key=True)
+    visitor_name = db.Column(db.String(255))
+    visitor_last_name = db.Column(db.String(255))
+    visitor_car_brand = db.Column(db.String(255))
+    visitor_car_model = db.Column(db.String(255))
+    visitor_car_plate = db.Column(db.String(255))
+    visitor_car_color = db.Column(db.String(255))
+    visitor_entry_datetime = db.Column(db.DateTime(timezone=True))
+    visitor_going_coto = db.Column(db.Boolean)
+    visitor_is_entry = db.Column(db.Boolean)
+    house_id = db.Column(db.ForeignKey('residents_house.id'))
 
     def __repr__(self):
         return """

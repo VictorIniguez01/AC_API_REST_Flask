@@ -1,12 +1,13 @@
-from sqlalchemy import Column, String, Integer, ForeignKey
-from sqlalchemy.orm import relationship
-from models.base import Base
+from models.base import db
 
-class Coto(Base):
+class Coto(db.Model):
     __tablename__ = 'residents_coto'
 
-    id = Column(Integer, primary_key=True)
-    coto_name = Column(String(255))
+    id = db.Column(db.Integer, primary_key=True)
+    coto_name = db.Column(db.String(255))
+
+    house = db.relationship('House', backref='residents_coto')
+    device = db.relationship('Device', backref='residents_coto')
 
     def __repr__(self):
         return f"""
@@ -20,14 +21,15 @@ class Coto(Base):
             'name': self.coto_name
         }
 
-class House(Base):
+class House(db.Model):
     __tablename__ = 'residents_house'
 
-    id = Column(Integer, primary_key=True)
-    house_address = Column(String(255))
-    coto_id = Column(ForeignKey('residents_coto.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    house_address = db.Column(db.String(255))
+    coto_id = db.Column(db.ForeignKey('residents_coto.id'))
 
-    coto = relationship('Coto', backref='residents_house')
+    resident = db.relationship('Resident', backref='residents_house')
+    visitor = db.relationship('Visitor', backref='residents_house')
 
     def __repr__(self):
         return f"""
@@ -43,16 +45,16 @@ class House(Base):
             'coto_id': self.coto_id
         }
 
-class Resident(Base):
+class Resident(db.Model):
     __tablename__ = 'residents_resident'
     
-    id = Column(Integer, primary_key=True)
-    resident_name = Column(String(255))
-    resident_last_name = Column(String(255))
-    resident_cellphone_number = Column(Integer)
-    house_id = Column(ForeignKey('residents_house.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    resident_name = db.Column(db.String(255))
+    resident_last_name = db.Column(db.String(255))
+    resident_cellphone_number = db.Column(db.Integer)
+    house_id = db.Column(db.ForeignKey('residents_house.id'))
 
-    house = relationship('House', backref='residents_resident')
+    card = db.relationship('Card', backref='residents_resident')
 
     def __repr__(self):
         return f"""

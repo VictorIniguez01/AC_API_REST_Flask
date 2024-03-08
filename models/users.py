@@ -1,16 +1,12 @@
-from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
-from sqlalchemy.orm import relationship
-from models.base import Base
-from models.residence import Resident, Coto
+from models.residence import Coto, Resident
+from models.base import db
 
-class Card(Base):
+class Card(db.Model):
     __tablename__ = 'devices_card'
 
-    id = Column(Integer, primary_key=True)
-    card_code = Column(String(255))
-    resident_id = Column(ForeignKey('residents_resident.id'))
-
-    resident = relationship('Resident', backref='devices_card')
+    id = db.Column(db.Integer, primary_key=True)
+    card_code = db.Column(db.String(255))
+    resident_id = db.Column(db.ForeignKey('residents_resident.id'))
 
     def __repr__(self):
         return f"""
@@ -26,14 +22,16 @@ class Card(Base):
             'resident_id': self.resident_id
         }
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'webapp_user'
 
-    id = Column(Integer, primary_key=True)
-    password = Column(String(255))
-    username = Column(String(255))
-    mqtt_topic = Column(String(100))
-    is_coto = Column(Boolean)
+    id = db.Column(db.Integer, primary_key=True)
+    password = db.Column(db.String(255))
+    username = db.Column(db.String(255))
+    mqtt_topic = db.Column(db.String(100))
+    is_coto = db.Column(db.Boolean)
+
+    device = db.relationship('Device', backref='webapp_user')
 
     def __repr__(self) -> str:
         return f"""
@@ -51,16 +49,13 @@ class User(Base):
             'is_coto': self.is_coto
         }
 
-class Device(Base):
+class Device(db.Model):
     __tablename__ = 'devices_device'
 
-    id = Column(Integer, primary_key=True)
-    device_name = Column(String(255))
-    coto_id = Column(ForeignKey('residents_coto.id'))
-    user_id = Column(ForeignKey('webapp_user.id'))
-
-    coto = relationship('Coto', backref='devices_device')
-    user = relationship('User', backref='devices_device')
+    id = db.Column(db.Integer, primary_key=True)
+    device_name = db.Column(db.String(255))
+    coto_id = db.Column(db.ForeignKey('residents_coto.id'))
+    user_id = db.Column(db.ForeignKey('webapp_user.id'))
 
     def __repr__(self):
         return f"""
